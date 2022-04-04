@@ -6,9 +6,7 @@
 int main(int argc, char *argv[]) {
 	
 	setlocale(LC_ALL, "Portuguese");
-	
-	// LeituraDados();
-	printf("teste");
-	
+		
+	printf("João Victor Cordeiro");
 	return 0;
 }
