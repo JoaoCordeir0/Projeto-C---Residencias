@@ -6,11 +6,11 @@
 void menu(){
 	char acao;
 	do{
-		printf("1 - Cadastrar cada residência ");			
-		printf("2 - Cadastrar inadimplência ");
-		printf("3 - Remover uma inadimplência ");
-		printf("4 - Relatar inadimplências ");
-		printf("5 - Sair");
+		printf("\n\n1 - Cadastrar cada residência ");			
+		printf("\n2 - Cadastrar inadimplência ");
+		printf("\n3 - Remover uma inadimplência ");
+		printf("\n4 - Relatar inadimplências ");
+		puts("\n5 - Sair");
 		scanf("%d", & acao);
 		
 		switch(acao){
@@ -27,6 +27,7 @@ void menu(){
 				RelatarInadimplencia();
 				break;
 			case 5:
+				puts("\nAté a próxima!");
 				break;
 			default:
 			    printf("\nEscolha invalida!");
