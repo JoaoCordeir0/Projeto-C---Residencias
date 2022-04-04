@@ -6,7 +6,12 @@
 int main(int argc, char *argv[]) {
 	
 	setlocale(LC_ALL, "Portuguese");
-		
-	printf("João Victor Cordeiro");
+	
+	printf("________________________________\n\n");
+	printf("| Sistem de controle moradores |\n");
+	printf("________________________________");
+	
+	menu();
+
 	return 0;
 }
