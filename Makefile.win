@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = CadastrarInadimplencia.o LeituraDados.o main.o RelatarInadimplencia.o RemoverInadimplencia.o Menu.o CadastrarResidencia.o
-LINKOBJ  = CadastrarInadimplencia.o LeituraDados.o main.o RelatarInadimplencia.o RemoverInadimplencia.o Menu.o CadastrarResidencia.o
+OBJ      = main.o Funcoes.o Structs.o
+LINKOBJ  = main.o Funcoes.o Structs.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -24,23 +24,11 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-CadastrarInadimplencia.o: CadastrarInadimplencia.c
-	$(CC) -c CadastrarInadimplencia.c -o CadastrarInadimplencia.o $(CFLAGS)
-
-LeituraDados.o: LeituraDados.c
-	$(CC) -c LeituraDados.c -o LeituraDados.o $(CFLAGS)
-
 main.o: main.c
 	$(CC) -c main.c -o main.o $(CFLAGS)
 
-RelatarInadimplencia.o: RelatarInadimplencia.c
-	$(CC) -c RelatarInadimplencia.c -o RelatarInadimplencia.o $(CFLAGS)
+Funcoes.o: Funcoes.c
+	$(CC) -c Funcoes.c -o Funcoes.o $(CFLAGS)
 
-RemoverInadimplencia.o: RemoverInadimplencia.c
-	$(CC) -c RemoverInadimplencia.c -o RemoverInadimplencia.o $(CFLAGS)
-
-Menu.o: Menu.c
-	$(CC) -c Menu.c -o Menu.o $(CFLAGS)
-
-CadastrarResidencia.o: CadastrarResidencia.c
-	$(CC) -c CadastrarResidencia.c -o CadastrarResidencia.o $(CFLAGS)
+Structs.o: Structs.c
+	$(CC) -c Structs.c -o Structs.o $(CFLAGS)
