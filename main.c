@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include <locale.h>
+#include <time.h>
 
 int main(int argc, char *argv[]) {
 	
