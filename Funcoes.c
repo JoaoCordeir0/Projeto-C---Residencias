@@ -19,9 +19,9 @@ struct Pessoa{
 
 struct Residencia{
 	int quantidade;
-	int inadimplenciasCadastradas;	
-	int inadimplenciasAtivas;
-	int inadimplencias;	
+	int inadimplenciasCadastradas[50];	
+	int inadimplenciasAtivas[50];
+	int inadimplencias[50];	
 	int numero;
 	
 	int ano;
@@ -166,8 +166,8 @@ int CadastrarInadimplencia(char *rua, int numeroCasa, struct Residencia* res, in
 				res[result].mes = mes;
 				res[result].ano = ano;
 				res[result].valor = valor;
-				res[result].inadimplenciasCadastradas = res[result].inadimplenciasCadastradas + 1;
-				res[result].inadimplenciasAtivas = res[result].inadimplenciasAtivas + 1;											
+				res[result].inadimplenciasCadastradas[result] = res[result].inadimplenciasCadastradas[result] + 1;
+				res[result].inadimplenciasAtivas[result] = res[result].inadimplenciasAtivas[result] + 1;											
 			}
 	}
 	return result; 
