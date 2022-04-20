@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<locale.h>
 
-#define MAX 100
+int tamanhoVetor = 100;
 
 struct Telefone{ int ddd, numero; };
 
@@ -40,8 +40,8 @@ void menu(){
 	int acao, pos=0, result=0, compara, numeroCasa, mes, ano;
 	float valor;
 	char lixo, aux[40], rua[60];
-	struct Residencia res[MAX];
-	struct Pessoa user[MAX];	
+	struct Residencia *res[tamanhoVetor];
+	struct Pessoa *user[tamanhoVetor];	
 		
 	do{
 		printf("\n1 - Cadastrar residência ");			
@@ -53,20 +53,26 @@ void menu(){
 		
 		switch(acao){
 			case 1:
-				scanf("%c", &lixo);
-				result = CadastrarResidencia(user, res, &pos);	
+				scanf("%c", &lixo);			
+				if(pos == tamanhoVetor){
+					res[tamanhoVetor] = malloc(sizeof(struct Residencia)*(tamanhoVetor+10));					
+					tamanhoVetor += 10;
+					printf("\nALocando mais espaço de memória... tente denovo! \n");			
+				}else{				
+					result = CadastrarResidencia(user, res, &pos);		
 					if(result){
 						puts("\nCadastrado!");
 					}
 					else{
 						puts("\nNão cadastrado!");
-					}			
+					}
+				}									
 				break;
 			case 2:
 				scanf("%c", &lixo);
 				printf("\nInforme o nome da rua -> ");
 					gets(rua);
-				printf("\nInforme o numero da casa -> ");
+				printf("Informe o numero da casa -> ");
 					scanf("%d", & numeroCasa);
 					
 				result = CadastrarInadimplencia(rua, numeroCasa, res, pos);
@@ -100,6 +106,7 @@ void menu(){
 				break;
 			case 5:
 				puts("\nAté a próxima!");
+				exit(0);
 				break;
 			default:
 			    printf("\nEscolha invalida!");
@@ -112,20 +119,22 @@ void menu(){
 */
 int CadastrarResidencia(struct Pessoa* user, struct Residencia* res, int* pos){
 	int result = 0, i;
+	char lixo;
+	//fflush(stdin); == Serve para limpar o buffer do teclado.
 	
-	if(*pos < MAX){	
+	if(*pos < tamanhoVetor){	
 		puts("----Informações sobre a residência----");
 		
 		printf("\nNome do residente responsável -> ");
-			gets(res[*pos].titular);
+			gets(res[*pos].titular); fflush(stdin);	
 		printf("Endereço - CEP -> ");
-			gets(res[*pos].cep);			
+			gets(res[*pos].cep); fflush(stdin);				 
 		printf("Endereço - Estado -> ");
-			gets(res[*pos].estado);			
+			gets(res[*pos].estado);	fflush(stdin);		 	
 		printf("Endereço - Ciadde -> ");
-			gets(res[*pos].cidade);
+			gets(res[*pos].cidade); fflush(stdin);	
 		printf("Endereço - Rua -> ");
-			gets(res[*pos].rua);
+			gets(res[*pos].rua); fflush(stdin);	
 		printf("Endereço - Numero -> ");
 			scanf("%d", & res[*pos].numero); fflush(stdin);			
 		printf("Quantidade de residentes -> ");
@@ -135,17 +144,17 @@ int CadastrarResidencia(struct Pessoa* user, struct Residencia* res, int* pos){
 		
 		for(i=1; i<=res[*pos].quantidade; i++){
 			printf("\nNome do %dº residente ->", i);
-				gets(user[*pos].nome); 
+				gets(user[*pos+i].nome); fflush(stdin);	
 			printf("CPF do %dº residente ->", i);
-				gets(user[*pos].cpf); 
+				gets(user[*pos+i].cpf); fflush(stdin);	
 			printf("Sexo do %dº residente ->", i);
-				gets(user[*pos].sexo); 
+				gets(user[*pos+i].sexo); fflush(stdin);	
 			printf("Data de nascimento do %dº residente ->", i);
-				scanf("%d/%d/%d", &user[*pos].nascimento.dia, &user[*pos].nascimento.mes, &user[*pos].nascimento.ano);
+				scanf("%d/%d/%d", &user[*pos+i].nascimento.dia, &user[*pos+i].nascimento.mes, &user[*pos+i].nascimento.ano); fflush(stdin);	
 			
-			if((user[*pos].nascimento.ano + 18) <= 2022){
-				printf("\nTelefone de contato do %dº residente ->", i);
-					scanf("%d%d", &user[*pos].fone.ddd, &user[*pos].fone.numero);
+			if((user[*pos+i].nascimento.ano + 18) <= 2022){
+				printf("Telefone de contato do %dº residente ->", i);
+					scanf("%d%d", &user[*pos+i].fone.ddd, &user[*pos+i].fone.numero); fflush(stdin);	
 			}					
 		}				
 		(*pos)++;
@@ -176,8 +185,8 @@ int CadastrarInadimplencia(char *rua, int numeroCasa, struct Residencia* res, in
 				scanf("%f", & valor);
 			if(mes >= 1 && ano >= 1){
 				res[result].date.mes = mes;
-				res[result].date.ano = ano;
-				res[result].date.valor = valor;
+				res[result].date.ano= ano;
+				res[result].date.valor= valor;
 				res[result].inadimplenciasCadastradas = res[result].inadimplenciasCadastradas + 1;
 				res[result].inadimplenciasAtivas = res[result].inadimplenciasAtivas + 1;											
 			}
@@ -195,7 +204,7 @@ int RemoverInadimplencia(char *rua, int numeroCasa, int mes, int ano, struct Res
 		}
 	}
 	if(result >= 0){
-		res[result].date.valor = res[result].date.valor - res[result].date.valor;
+		res[result].date.valor= res[result].date.valor - res[result].date.valor;
 		res[result].inadimplenciasCadastradas = res[result].inadimplenciasCadastradas - 1;
 		res[result].inadimplenciasAtivas = res[result].inadimplenciasAtivas - 1;														
 	}
@@ -213,10 +222,10 @@ void RelatarInadimplencia(struct Residencia* res, int pos){
 			printf("\nNumero da casa -> %d\n", res[i].numero);
 			
 			for(j=i; j<res[i].inadimplenciasCadastradas; j++){
-				printf("\nInadimplência no mês %d no ano de %d no valor de %f\n", res[j].date.mes, res[j].date.ano, res[j].date.valor);
+				printf("\nInadimplência no mês %d no ano de %d no valor de %.2f\n", res[j].date.mes, res[j].date.ano, res[j].date.valor);
 				somaValor = somaValor + res[j].date.valor;
 			}			
-			printf("\nValor total de inadimplências -> %f", somaValor);
+			printf("\nValor total de inadimplências -> %.2f", somaValor);
 			
 			somaValor = 0;
 			printf("\n");
