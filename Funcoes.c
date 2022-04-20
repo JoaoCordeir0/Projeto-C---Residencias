@@ -9,6 +9,8 @@ struct Telefone{ int ddd, numero; };
 
 struct Data{ int dia, mes, ano; };
 
+struct DataInadiplencia { int ano, mes; float valor;};
+
 struct Pessoa{
 	char nome[40];
 	char sexo[10];
@@ -19,14 +21,10 @@ struct Pessoa{
 
 struct Residencia{
 	int quantidade;
-	int inadimplenciasCadastradas[50];	
-	int inadimplenciasAtivas[50];
-	int inadimplencias[50];	
-	int numero;
-	
-	int ano;
-	int mes;
-	float valor;
+	int inadimplenciasCadastradas;	
+	int inadimplenciasAtivas;
+	int inadimplencias;	
+	int numero;	
 	
 	char rua[60];	
 	char cep[60];
@@ -35,17 +33,18 @@ struct Residencia{
 	char titular[60];	
 	
 	struct Pessoa residente;
+	struct DataInadiplencia date;
 };
 
 void menu(){
-	int acao, pos=0, result=0, compara, a, numeroCasa, mes, ano;
+	int acao, pos=0, result=0, compara, numeroCasa, mes, ano;
 	float valor;
 	char lixo, aux[40], rua[60];
 	struct Residencia res[MAX];
 	struct Pessoa user[MAX];	
 		
 	do{
-		printf("\n\n1 - Cadastrar residência ");			
+		printf("\n1 - Cadastrar residência ");			
 		printf("\n2 - Cadastrar inadimplência ");
 		printf("\n3 - Remover uma inadimplência ");
 		printf("\n4 - Relatar inadimplências ");
@@ -73,13 +72,27 @@ void menu(){
 				result = CadastrarInadimplencia(rua, numeroCasa, res, pos);
 				
 				if(result==-1){
-					printf("\nResidência não encontrada!");					
+					printf("\nResidência não encontrada!\n");					
 				}else{
-					printf("\nInadimplência cadastrada com sucesso para está residência!");	
+					printf("\nInadimplência cadastrada com sucesso para está residência!\n");	
 				}																
 				break;
 			case 3:
-				printf("Em dev");
+				scanf("%c", &lixo);
+				printf("\nInforme o nome da rua -> ");
+					gets(rua);
+				printf("\nInforme o numero da casa -> ");
+					scanf("%d", & numeroCasa);
+				printf("\nDigite o mes e ano da inadimplência a ser removida-> ");
+					scanf("%d%d", & mes, & ano);		
+					
+				result = RemoverInadimplencia(rua, numeroCasa, mes, ano, res, pos);
+				
+				if(result==-1){
+					printf("\nResidência não encontrada!\n");					
+				}else{
+					printf("\nInadimplência removida com sucesso para está residência!\n");	
+				}
 				break;
 			case 4:	
 				scanf("%c", &lixo);										
@@ -105,18 +118,17 @@ int CadastrarResidencia(struct Pessoa* user, struct Residencia* res, int* pos){
 		
 		printf("\nNome do residente responsável -> ");
 			gets(res[*pos].titular);
-		printf("\nEndereço - CEP -> ");
+		printf("Endereço - CEP -> ");
 			gets(res[*pos].cep);			
-		printf("\nEndereço - Estado -> ");
+		printf("Endereço - Estado -> ");
 			gets(res[*pos].estado);			
-		printf("\nEndereço - Ciadde -> ");
+		printf("Endereço - Ciadde -> ");
 			gets(res[*pos].cidade);
-		printf("\nEndereço - Rua -> ");
+		printf("Endereço - Rua -> ");
 			gets(res[*pos].rua);
-			
-		printf("\nEndereço - Numero ->");
+		printf("Endereço - Numero -> ");
 			scanf("%d", & res[*pos].numero); fflush(stdin);			
-		printf("\nQuantidade de residentes -> ");
+		printf("Quantidade de residentes -> ");
 			scanf("%d", & res[*pos].quantidade); fflush(stdin);		
 			
 		puts("\n----Informações sobre os residentes----");	
@@ -124,11 +136,11 @@ int CadastrarResidencia(struct Pessoa* user, struct Residencia* res, int* pos){
 		for(i=1; i<=res[*pos].quantidade; i++){
 			printf("\nNome do %dº residente ->", i);
 				gets(user[*pos].nome); 
-			printf("\nCPF do %dº residente ->", i);
+			printf("CPF do %dº residente ->", i);
 				gets(user[*pos].cpf); 
-			printf("\nSexo do %dº residente ->", i);
+			printf("Sexo do %dº residente ->", i);
 				gets(user[*pos].sexo); 
-			printf("\nData de nascimento do %dº residente ->", i);
+			printf("Data de nascimento do %dº residente ->", i);
 				scanf("%d/%d/%d", &user[*pos].nascimento.dia, &user[*pos].nascimento.mes, &user[*pos].nascimento.ano);
 			
 			if((user[*pos].nascimento.ano + 18) <= 2022){
@@ -152,29 +164,42 @@ int CadastrarInadimplencia(char *rua, int numeroCasa, struct Residencia* res, in
 	
 	for(i=0; i<pos; i++){
 		if(strcmp(res[i].rua, rua) == 0 && res[i].numero == numeroCasa){		
-			result = i;
+			result = i;	
 			i = pos;		
 		}
 	}
 	if(result >= 0){
 		printf("\nResidência selecionada!\n");	
 			printf("\nDigite o mes e ano da inadimplência -> ");
-				scanf("%d%d", & mes, &ano);
+				scanf("%d%d", & mes, & ano);
 			printf("Digite o valor da inadimplência -> ");
 				scanf("%f", & valor);
 			if(mes >= 1 && ano >= 1){
-				res[result].mes = mes;
-				res[result].ano = ano;
-				res[result].valor = valor;
-				res[result].inadimplenciasCadastradas[result] = res[result].inadimplenciasCadastradas[result] + 1;
-				res[result].inadimplenciasAtivas[result] = res[result].inadimplenciasAtivas[result] + 1;											
+				res[result].date.mes = mes;
+				res[result].date.ano = ano;
+				res[result].date.valor = valor;
+				res[result].inadimplenciasCadastradas = res[result].inadimplenciasCadastradas + 1;
+				res[result].inadimplenciasAtivas = res[result].inadimplenciasAtivas + 1;											
 			}
 	}
 	return result; 
 }
 
-int RemoverInadimplencia(){
+int RemoverInadimplencia(char *rua, int numeroCasa, int mes, int ano, struct Residencia* res, int pos){
+	int i, result=-1;
 	
+	for(i=0; i<pos; i++){
+		if(strcmp(res[i].rua, rua) == 0 && res[i].numero == numeroCasa && res[i].date.mes == mes && res[i].date.ano == ano){		
+			result = i;	
+			i = pos;		
+		}
+	}
+	if(result >= 0){
+		res[result].date.valor = res[result].date.valor - res[result].date.valor;
+		res[result].inadimplenciasCadastradas = res[result].inadimplenciasCadastradas - 1;
+		res[result].inadimplenciasAtivas = res[result].inadimplenciasAtivas - 1;														
+	}
+	return result; 
 }
 
 void RelatarInadimplencia(struct Residencia* res, int pos){
@@ -187,11 +212,14 @@ void RelatarInadimplencia(struct Residencia* res, int pos){
 			printf("\nNome da rua -> %s\n", res[i].rua);
 			printf("\nNumero da casa -> %d\n", res[i].numero);
 			
-			for(j=0; j<res[i].inadimplenciasCadastradas; j++){
-				printf("\nInadimplência no mês %d ano %d no valor de %f\n", res[j].mes, res[j].ano, res[j].valor);
-			}
-			somaValor = somaValor + res[i].valor;
+			for(j=i; j<res[i].inadimplenciasCadastradas; j++){
+				printf("\nInadimplência no mês %d no ano de %d no valor de %f\n", res[j].date.mes, res[j].date.ano, res[j].date.valor);
+				somaValor = somaValor + res[j].date.valor;
+			}			
 			printf("\nValor total de inadimplências -> %f", somaValor);
+			
+			somaValor = 0;
+			printf("\n");
 		}	
 }
 

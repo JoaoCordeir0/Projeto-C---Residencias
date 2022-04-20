@@ -8,9 +8,9 @@ int main(int argc, char *argv[]) {
 	
 	setlocale(LC_ALL, "Portuguese");
 	
-	printf("________________________________\n\n");
-	printf("| Sistem de controle moradores |\n");
-	printf("________________________________");
+	printf("___________________________________\n\n");
+	printf("| Sistem de controle de moradores |\n");
+	printf("___________________________________\n");
 	
 	menu();
 
